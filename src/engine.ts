@@ -35,17 +35,31 @@ export interface Frame {
   food: Food[];
 }
 
+export const defaultGame: Game = {
+  width: 10,
+  height: 10
+};
+
 export async function run(code: Code, emit: (frame: Frame) => void) {
   const color = code.start({}).color;
   const start: Frame = {
     turn: 1,
-    game: {
-      width: 10,
-      height: 10
-    },
+    game: defaultGame,
     food: [
       {
         x: 3,
+        y: 2
+      },
+      {
+        x: 4,
+        y: 2
+      },
+      {
+        x: 5,
+        y: 2
+      },
+      {
+        x: 6,
         y: 2
       }
     ],
@@ -62,6 +76,13 @@ export async function run(code: Code, emit: (frame: Frame) => void) {
           type: "head",
           shouldRender: true,
           direction: "up"
+        },
+        {
+          x: 5,
+          y: 6,
+          type: "tail",
+          shouldRender: true,
+          direction: ""
         }
       ]
     }
@@ -72,7 +93,7 @@ export async function run(code: Code, emit: (frame: Frame) => void) {
   while (turn <= 100) {
     frame = { ...frame, turn };
     const move = code.move({}).move;
-    const next = moveTransform(frame.snake.body[0], turn, frame.game, move);
+    const next = moveTransform(frame.snake, turn, frame.game, move);
     const foodIdx = ateFood(next, frame.food);
 
     if (foodIdx != -1) {
@@ -85,7 +106,11 @@ export async function run(code: Code, emit: (frame: Frame) => void) {
     }
     frame.snake.body.unshift(next);
 
-    frame.snake
+    frame.snake.body = frame.snake.body.map((part, idx) =>
+      formatBody(frame.snake, idx)
+    );
+
+    console.log(frame);
     emit(frame);
 
     await sleep(300);
@@ -107,16 +132,16 @@ export class MoveError extends Error {
 }
 
 function moveTransform(
-  head: SnakeBody,
+  snake: Snake,
   turn: number,
   game: Game,
   move: string
 ): SnakeBody {
   const offBoard = () => {
-    throw new MoveError("Snake off board!", turn);
+    throw new MoveError(`Snake moved ${move} off the board!`, turn);
   };
 
-  head = { ...head, direction: move };
+  const head = Object.assign({}, snake.body[0]);
   switch (move) {
     case "up":
       head.y -= 1;
@@ -137,9 +162,62 @@ function moveTransform(
     default:
       throw new MoveError(`Unkown move "${move}"`, turn);
   }
+
+  snake.body.forEach(part => {
+    if (part.x === head.x && part.y === head.y)
+      throw new MoveError(`Snake moved ${move} into itself!`, turn);
+  });
+
   return head;
 }
 
 function sleep(ms = 0) {
   return new Promise(r => setTimeout(r, ms));
+}
+
+function formatBody(snake: Snake, partIdx: number): SnakeBody {
+  const part = snake.body[partIdx];
+  const next = snake.body[partIdx - 1];
+  return {
+    ...part,
+    direction: next ? getDirection(part, next) : headDirection(snake),
+    shouldRender: !isCovered(snake, partIdx),
+    type: getType(snake, partIdx)
+  };
+}
+
+function getDirection(a: SnakeBody, b: SnakeBody) {
+  if (a.x < b.x) {
+    return "right";
+  } else if (b.x < a.x) {
+    return "left";
+  } else if (a.y < b.y) {
+    return "down";
+  }
+  return "up";
+}
+
+function headDirection(snake: Snake) {
+  return snake.body.length > 1
+    ? getDirection(snake.body[1], snake.body[0])
+    : "up";
+}
+
+function isCovered(snake: Snake, partIndex: number) {
+  const part = snake.body[partIndex];
+  const next = snake.body[partIndex - 1];
+
+  return next && next.x === part.x && next.y === part.y;
+}
+
+function getType(snake: Snake, partIndex: number) {
+  if (partIndex === 0) {
+    return "head";
+  }
+
+  if (partIndex === snake.body.length - 1) {
+    return "tail";
+  }
+
+  return "body";
 }

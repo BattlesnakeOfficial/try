@@ -14,6 +14,10 @@ export default ({
   <AceEditor
     value={value}
     onChange={onChange}
+    showGutter={false}
+    setOptions={{
+      printMargin: false,
+    }}
     width="100%"
     height="100%"
     mode="javascript"
