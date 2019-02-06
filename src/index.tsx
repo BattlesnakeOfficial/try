@@ -11,6 +11,7 @@ import "./index.css";
 
 interface AppState {
   code: string;
+  cancelled?: boolean;
   frame?: engine.Frame;
   error?: Error;
 }
@@ -26,25 +27,34 @@ class App extends React.Component<{}, AppState> {
     });
   }
 
+  cancelled = () => !!this.state.cancelled;
+
   handleCodeChange = (code: string) => {
     localStorage.setItem("code", code);
     this.setState({ code });
   };
 
-  handleStart = () => {
-    setTimeout(async () => {
-      try {
-        await engine.run(code.evaluate(this.state.code), frame => {
-          this.setState({ frame, error: undefined });
-        });
-      } catch (error) {
-        this.setState({ error });
-      }
-    }, 0);
+  handleStop = () => {
+    this.setState({ cancelled: true });
   };
 
+  handleStart = background(async () => {
+    this.setState({ cancelled: false });
+    try {
+      const snake = code.evaluate(this.state.code);
+      await engine.run(snake, this, frame => {
+        this.setState({ frame, error: undefined });
+      });
+    } catch (error) {
+      console.error(error);
+      this.setState({ error });
+    }
+  });
+
   render() {
-    const { frame, error, code } = this.state;
+    const { error, code } = this.state;
+    const frame = this.state.frame || engine.initialFrame;
+
     return (
       <Container fluid={true} style={{ height: "100%" }}>
         <Grid style={{ height: "100%" }} divided="vertically">
@@ -56,20 +66,25 @@ class App extends React.Component<{}, AppState> {
               <Editor value={code} onChange={this.handleCodeChange} />
             </Grid.Column>
             <Grid.Column>
-                <Board
-                  food={frame ? frame.food : []}
-                  columns={engine.defaultGame.width}
-                  rows={engine.defaultGame.height}
-                  snakes={frame ? [frame.snake] : []}
-                />
+              <Board
+                food={frame.food}
+                columns={frame.game.width}
+                rows={frame.game.height}
+                snakes={[frame.snake]}
+              />
               {error && <Message color="red" content={error.message} />}
               <Button onClick={this.handleStart}>Start</Button>
+              <Button onClick={this.handleStop}>Stop</Button>
             </Grid.Column>
           </Grid.Row>
         </Grid>
       </Container>
     );
   }
+}
+
+function background(fn: () => void) {
+  return () => setTimeout(fn, 0);
 }
 
 ReactDOM.render(<App />, document.getElementById("root"));
