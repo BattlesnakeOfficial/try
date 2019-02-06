@@ -1,4 +1,5 @@
-import { run, Frame, MoveError } from "./engine";
+import { run, MoveError } from "./engine";
+import { UIFrame } from './ui';
 
 describe("engine", async () => {
   it("runs a simple game", async () => {
@@ -10,19 +11,25 @@ describe("engine", async () => {
         return { move: "up" };
       }
     };
-    const frames: Frame[] = [];
-    const cb = (frame: Frame) => {
+    const canceller = {
+      cancelled() {
+        return false;
+      }
+    }
+
+    const frames: UIFrame[] = [];
+    const cb = (frame: UIFrame) => {
       frames.push(frame);
     };
 
     let err: MoveError;
     try {
-      await run(code, cb);
+      await run(code, canceller, cb);
     } catch (e) {
       err = e;
     }
 
-    expect(err.message).toEqual("Snake off board!");
+    expect(err.message).toEqual("Snake moved up off the board!");
     expect(err.turn).toEqual(6);
   });
 });
