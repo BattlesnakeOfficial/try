@@ -17,6 +17,8 @@ export default ({
     showGutter={false}
     setOptions={{
       printMargin: false,
+      tabSize: 2,
+      useSoftTabs: true,
     }}
     width="100%"
     height="100%"
