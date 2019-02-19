@@ -1,6 +1,6 @@
 export const colors = {
   pageBackground: "#fff",
-  gridBackground: "#ddd",
+  gridBackground: "#fff",
   cellBackground: "#e8e8e8",
   healthBarDeathBackground: "#333",
   food: "orange",

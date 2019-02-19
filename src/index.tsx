@@ -5,12 +5,14 @@ import Editor from "./Editor";
 import Board from "./Board";
 import * as engine from "./engine";
 import * as code from "./code";
+import example from './example';
 
 import "semantic-ui-css/semantic.min.css";
 import "./index.css";
 
 interface AppState {
   code: string;
+  running?: boolean;
   cancelled?: boolean;
   frame?: engine.Frame;
   error?: Error;
@@ -23,7 +25,7 @@ class App extends React.Component<{}, AppState> {
 
   componentDidMount() {
     this.setState({
-      code: localStorage.getItem("code") || ""
+      code: localStorage.getItem("code") || example
     });
   }
 
@@ -35,10 +37,18 @@ class App extends React.Component<{}, AppState> {
   };
 
   handleStop = () => {
-    this.setState({ cancelled: true });
+    this.setState({ cancelled: true, running: false });
   };
 
-  handleStart = background(async () => {
+  handleStart = () => {
+    if (this.state.running) {
+      return;
+    }
+    this.setState({ running: true });
+    this.run();
+  }
+
+  run = background(async () => {
     this.setState({ cancelled: false });
     try {
       const snake = code.evaluate(this.state.code);
@@ -56,25 +66,28 @@ class App extends React.Component<{}, AppState> {
     const frame = this.state.frame || engine.initialFrame;
 
     return (
-      <Container fluid={true} style={{ height: "100%" }}>
+      <Container fluid={true} style={{ height: 300 }}>
         <Grid style={{ height: "100%" }} divided="vertically">
-          <Grid.Row columns={3}>
-            <Grid.Column>
-              <p>Left</p>
-            </Grid.Column>
-            <Grid.Column style={{ height: "100%" }}>
+          <Grid.Row columns={2}>
+            <Grid.Column width={10} style={{ height: "100%" }}>
               <Editor value={code} onChange={this.handleCodeChange} />
             </Grid.Column>
-            <Grid.Column>
-              <Board
-                food={frame.food}
-                columns={frame.game.width}
-                rows={frame.game.height}
-                snakes={[frame.snake]}
-              />
-              {error && <Message color="red" content={error.message} />}
-              <Button onClick={this.handleStart}>Start</Button>
-              <Button onClick={this.handleStop}>Stop</Button>
+            <Grid.Column width={5}>
+              <Grid.Row>
+                <Board
+                  food={frame.food}
+                  columns={frame.game.width}
+                  rows={frame.game.height}
+                  snakes={[frame.snake]}
+                />
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>
+                  {error && <Message color="red" content={error.message} />}
+                  <Button onClick={this.handleStart}>Start</Button>
+                  <Button onClick={this.handleStop}>Stop</Button>
+                </Grid.Column>
+              </Grid.Row>
             </Grid.Column>
           </Grid.Row>
         </Grid>

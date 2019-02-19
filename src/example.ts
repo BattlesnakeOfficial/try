@@ -1,3 +1,4 @@
+export default `
 const moves = ["up", "down", "left", "right"];
 
 function moveToPoint(head, move) {
@@ -61,3 +62,4 @@ function move(req) {
 function start() {
   return { color: "green" };
 }
+`

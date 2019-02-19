@@ -19,7 +19,7 @@ class Board extends React.Component<BoardProps> {
       return snake;
     })
     return (
-      <svg viewBox="0 0 90 90">
+      <svg viewBox="0 0 90 90" height="300">
         <rect x="0" y="0" width="90" height="90" fill={colors.pageBackground} />
 
         <Grid
