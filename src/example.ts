@@ -1,9 +1,10 @@
-export default `function move() {
-  return { move: 'up' }
+export default `function start() {
+  return { color: "#3d00a6" }
 }
 
-function start() {
-  return { color: "green" };
+function move(state) {
+  console.log(state);
+  return { move: 'right' }
 }
 
 // Uncomment this code to run your app in an express server!
