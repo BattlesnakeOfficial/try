@@ -1,62 +1,29 @@
 export default `
-const moves = ["up", "down", "left", "right"];
+// Uncomment this code to run your app in an express server!
+// const http = require('http');
+// const port = 3000;
 
-function moveToPoint(head, move) {
-  switch (move) {
-    case "up":
-      return { ...head, y: head.y - 1 };
-    case "down":
-      return { ...head, y: head.y + 1 };
-    case "right":
-      return { ...head, x: head.x + 1 };
-    case "left":
-      return { ...head, x: head.x - 1 };
-    default:
-      throw new Error("Invalid move " + move);
-  }
-}
+// const server = http.createServer(function(req, res) {
+//   switch (req.url) {
+//     case '/move':
+//       res.statusCode = 200;
+//       res.end(JSON.stringify(move()));
+//       break;
+//     default:
+//       res.statusCode = 404;
+//       res.end('not found');
+//   }
+// });
 
-function isOffBoard(board, point) {
-  return (
-    point.x < 0 ||
-    point.y < 0 ||
-    point.y >= board.height ||
-    point.x >= board.width
-  );
-}
+// server.listen(port, function(err) {
+//   if (err) {
+//     throw err;
+//   }
+//   console.log('server is listening on', port);
+// });
 
-function isOnSnake(snake, point) {
-  for (let point2 of snake.body) {
-    if (point.x === point2.x && point.y === point2.y) return true;
-  }
-  return false;
-}
-
-function isSafe(me, board, move) {
-  const point = moveToPoint(me.body[0], move);
-
-  if (isOffBoard(board, point)) return false;
-
-  for (let snake of board.snakes) {
-    if (isOnSnake(snake, point)) return false;
-  }
-
-  return true;
-}
-
-function doMove(me, board) {
-  for (let move of moves) {
-    if (isSafe(me, board, move)) {
-      return move;
-    }
-  }
-  console.log("no safe move!");
-  return "up";
-}
-
-function move(req) {
-  console.log(req);
-  return { move: doMove(req.you, req.board) };
+function move() {
+  return { move: 'up' }
 }
 
 function start() {

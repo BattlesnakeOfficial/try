@@ -20,14 +20,8 @@ interface AppState {
 
 class App extends React.Component<{}, AppState> {
   state: AppState = {
-    code: ""
+    code: example
   };
-
-  componentDidMount() {
-    this.setState({
-      code: localStorage.getItem("code") || example
-    });
-  }
 
   cancelled = () => !!this.state.cancelled;
 
@@ -66,13 +60,13 @@ class App extends React.Component<{}, AppState> {
     const frame = this.state.frame || engine.initialFrame;
 
     return (
-      <Container fluid={true} style={{ height: 300 }}>
+      <Container fluid={true}>
         <Grid style={{ height: "100%" }} divided="vertically">
           <Grid.Row columns={2}>
             <Grid.Column width={10} style={{ height: "100%" }}>
               <Editor value={code} onChange={this.handleCodeChange} />
             </Grid.Column>
-            <Grid.Column width={5}>
+            <Grid.Column width={6}>
               <Grid.Row>
                 <Board
                   food={frame.food}
@@ -82,11 +76,9 @@ class App extends React.Component<{}, AppState> {
                 />
               </Grid.Row>
               <Grid.Row>
-                <Grid.Column>
-                  {error && <Message color="red" content={error.message} />}
-                  <Button onClick={this.handleStart}>Start</Button>
-                  <Button onClick={this.handleStop}>Stop</Button>
-                </Grid.Column>
+                <Button onClick={this.handleStart}>Start</Button>
+                <Button onClick={this.handleStop}>Stop</Button>
+                {error && <span style={{float: 'right', color: 'red'}}>{error.message}</span>}
               </Grid.Row>
             </Grid.Column>
           </Grid.Row>

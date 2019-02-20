@@ -108,7 +108,7 @@ function moveTransform(frame: Frame, move: string): Point {
   const { snake, turn, height, width } = frame;
 
   const offBoard = () => {
-    throw new MoveError(`Snake moved ${move} off the board!`, turn);
+    throw new MoveError(`Snake moved off the board!`, turn);
   };
 
   const head = Object.assign({}, snake.body[0]);
@@ -135,7 +135,7 @@ function moveTransform(frame: Frame, move: string): Point {
 
   snake.body.forEach(part => {
     if (part.x === head.x && part.y === head.y)
-      throw new MoveError(`Snake moved ${move} into itself!`, turn);
+      throw new MoveError(`Snake moved into itself!`, turn);
   });
 
   return head;
