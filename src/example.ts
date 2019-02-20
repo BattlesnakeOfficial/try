@@ -1,7 +1,14 @@
-export default `
-// Uncomment this code to run your app in an express server!
+export default `// Uncomment this code to run your app in an express server!
 // const http = require('http');
 // const port = 3000;
+
+function move() {
+  return { move: 'up' }
+}
+
+function start() {
+  return { color: "green" };
+}
 
 // const server = http.createServer(function(req, res) {
 //   switch (req.url) {
@@ -21,12 +28,4 @@ export default `
 //   }
 //   console.log('server is listening on', port);
 // });
-
-function move() {
-  return { move: 'up' }
-}
-
-function start() {
-  return { color: "green" };
-}
 `

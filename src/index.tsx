@@ -49,9 +49,10 @@ class App extends React.Component<{}, AppState> {
       await engine.run(snake, this, frame => {
         this.setState({ frame, error: undefined });
       });
+      this.setState({ running: false });
     } catch (error) {
       console.error(error);
-      this.setState({ error });
+      this.setState({ error, running: false });
     }
   });
 
@@ -63,10 +64,10 @@ class App extends React.Component<{}, AppState> {
       <Container fluid={true}>
         <Grid style={{ height: "100%" }} divided="vertically">
           <Grid.Row columns={2}>
-            <Grid.Column width={10} style={{ height: "100%" }}>
+            <Grid.Column computer={10} tablet={16} style={{ minHeight: 330, height: "100%" }}>
               <Editor value={code} onChange={this.handleCodeChange} />
             </Grid.Column>
-            <Grid.Column width={6}>
+            <Grid.Column width={6} className="computer only">
               <Grid.Row>
                 <Board
                   food={frame.food}
