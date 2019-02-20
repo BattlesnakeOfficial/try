@@ -18,8 +18,8 @@ const styles: { [k: string]: React.CSSProperties } = {
   board: { height: 352 },
   error: {
     textAlign: "center",
-    color: 'red',
-    height: '1.8em',
+    color: "red",
+    height: "1.8em"
   }
 };
 
@@ -27,13 +27,14 @@ interface AppState {
   code: string;
   running?: boolean;
   cancelled?: boolean;
-  frame?: engine.Frame;
+  frame: engine.Frame;
   error?: Error;
 }
 
 class App extends React.Component<{}, AppState> {
   state: AppState = {
-    code: example
+    code: example,
+    frame: engine.initialFrame
   };
 
   cancelled = () => !!this.state.cancelled;
@@ -41,6 +42,14 @@ class App extends React.Component<{}, AppState> {
   handleCodeChange = (code: string) => {
     localStorage.setItem("code", code);
     this.setState({ code });
+  };
+
+  handleReset = () => {
+    this.setState({
+      cancelled: true,
+      running: false,
+      frame: engine.initialFrame
+    });
   };
 
   handleStop = () => {
@@ -64,14 +73,13 @@ class App extends React.Component<{}, AppState> {
       });
       this.setState({ running: false });
     } catch (error) {
-      console.error(error);
+      console.log(error);
       this.setState({ error, running: false });
     }
   });
 
   render() {
-    const { error, code } = this.state;
-    const frame = this.state.frame || engine.initialFrame;
+    const { error, code, running, frame } = this.state;
 
     return (
       <Row className="board-row">
@@ -96,8 +104,9 @@ class App extends React.Component<{}, AppState> {
           </Row>
           <Row>
             <Col style={styles.controls}>
-              <Button onClick={this.handleStart}>Run</Button>
-              <Button onClick={this.handleStop}>Stop</Button>
+              {!running && <Button onClick={this.handleStart}>Play</Button>}
+              {running && <Button onClick={this.handleStop}>Pause</Button>}
+              <Button onClick={this.handleReset}>Reset</Button>
             </Col>
           </Row>
         </Col>
