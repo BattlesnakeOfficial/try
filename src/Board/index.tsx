@@ -2,7 +2,11 @@ import React from "react";
 import Grid from "./Grid";
 import { colors } from "./theme";
 import { Snake, Food } from "../engine";
-import { headSvg, tailSvg } from './svg';
+import { headSvg, tailSvg } from "./svg";
+
+const styles = {
+  height: 290
+};
 
 interface BoardProps {
   food: Food[];
@@ -17,9 +21,13 @@ class Board extends React.Component<BoardProps> {
       snake.headSvg = headSvg;
       snake.tailSvg = tailSvg;
       return snake;
-    })
+    });
     return (
-      <svg style={{ display: 'block', margin: 'auto' }} viewBox="0 0 90 90" height="300">
+      <svg
+        style={{ display: "block", margin: "auto" }}
+        viewBox="0 0 90 90"
+        height={styles.height}
+      >
         <rect x="0" y="0" width="90" height="90" fill={colors.pageBackground} />
 
         <Grid

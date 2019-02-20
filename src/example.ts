@@ -1,8 +1,4 @@
-export default `// Uncomment this code to run your app in an express server!
-// const http = require('http');
-// const port = 3000;
-
-function move() {
+export default `function move() {
   return { move: 'up' }
 }
 
@@ -10,6 +6,9 @@ function start() {
   return { color: "green" };
 }
 
+// Uncomment this code to run your app in an express server!
+// const http = require('http');
+// const port = 3000;
 // const server = http.createServer(function(req, res) {
 //   switch (req.url) {
 //     case '/move':
@@ -21,11 +20,9 @@ function start() {
 //       res.end('not found');
 //   }
 // });
-
 // server.listen(port, function(err) {
 //   if (err) {
 //     throw err;
 //   }
 //   console.log('server is listening on', port);
-// });
-`
+// });`

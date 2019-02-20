@@ -1,14 +1,27 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Container, Grid, Button, Message } from "semantic-ui-react";
+import { Row, Col, Button } from "./ui";
 import Editor from "./Editor";
 import Board from "./Board";
 import * as engine from "./engine";
 import * as code from "./code";
-import example from './example';
+import example from "./example";
 
-import "semantic-ui-css/semantic.min.css";
 import "./index.css";
+import "normalize.css";
+
+const styles: { [k: string]: React.CSSProperties } = {
+  controls: {
+    textAlign: "center"
+  },
+  editor: { height: 352 },
+  board: { height: 352 },
+  error: {
+    textAlign: "center",
+    color: 'red',
+    height: '1.8em',
+  }
+};
 
 interface AppState {
   code: string;
@@ -40,7 +53,7 @@ class App extends React.Component<{}, AppState> {
     }
     this.setState({ running: true });
     this.run();
-  }
+  };
 
   run = background(async () => {
     this.setState({ cancelled: false });
@@ -61,30 +74,34 @@ class App extends React.Component<{}, AppState> {
     const frame = this.state.frame || engine.initialFrame;
 
     return (
-      <Container fluid={true}>
-        <Grid style={{ height: "100%" }} divided="vertically">
-          <Grid.Row columns={2}>
-            <Grid.Column computer={10} tablet={16} style={{ minHeight: 330, height: "100%" }}>
-              <Editor value={code} onChange={this.handleCodeChange} />
-            </Grid.Column>
-            <Grid.Column width={6} className="computer only">
-              <Grid.Row>
-                <Board
-                  food={frame.food}
-                  columns={frame.game.width}
-                  rows={frame.game.height}
-                  snakes={[frame.snake]}
-                />
-              </Grid.Row>
-              <Grid.Row>
-                <Button onClick={this.handleStart}>Start</Button>
-                <Button onClick={this.handleStop}>Stop</Button>
-                {error && <span style={{float: 'right', color: 'red'}}>{error.message}</span>}
-              </Grid.Row>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Container>
+      <Row className="board-row">
+        <Col style={styles.editor}>
+          <Editor value={code} onChange={this.handleCodeChange} />
+        </Col>
+        <Col style={styles.board}>
+          <Row>
+            <Col style={styles.error}>
+              <span>{error ? error.message : ""}</span>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Board
+                food={frame.food}
+                columns={frame.game.width}
+                rows={frame.game.height}
+                snakes={[frame.snake]}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col style={styles.controls}>
+              <Button onClick={this.handleStart}>Run</Button>
+              <Button onClick={this.handleStop}>Stop</Button>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
     );
   }
 }

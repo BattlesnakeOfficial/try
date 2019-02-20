@@ -19,6 +19,7 @@ export default ({
       printMargin: false,
       tabSize: 2,
       useSoftTabs: true,
+      fontSize: "11pt",
     }}
     width="100%"
     height="100%"
