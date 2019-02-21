@@ -5,7 +5,7 @@ const styles = {
   col: { flex: 1 },
   button: {
     background: "none",
-    color: "inherit",
+    color: "white",
     border: "none",
     padding: "0.5em",
     font: "inherit",
@@ -47,8 +47,16 @@ export const Col = ({
   </div>
 );
 
-export const Button = (props: { onClick?: any; children?: any }) => (
-  <button {...props} style={styles.button}>
-    {props.children}
+export const Button = ({
+  style, 
+  onClick, 
+  children
+}: {
+  style?: React.CSSProperties;
+  onClick?: any; 
+  children?: any 
+}) => (
+  <button onClick={onClick} style={{...styles.button, ...style }}>
+    {children}
   </button>
 );
