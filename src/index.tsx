@@ -12,13 +12,30 @@ import "normalize.css";
 
 const styles: { [k: string]: React.CSSProperties } = {
   controls: {
-    textAlign: "center"
+    textAlign: "center",
+    paddingTop: "10px"
   },
-  editor: { height: 352 },
+  pauseButton: {
+    backgroundColor: "#399AF2",
+    borderRadius: "50px",
+    padding: "0.5em 1em",
+    color: "white",
+  },
+  playButton: {
+    backgroundColor: "#2fbfa0",
+    borderRadius: "50px",
+    padding: "0.5em 1.5em",
+    color: "white",
+  },  
+  editor: { 
+    height: 352,
+    flex: 2,
+    padding: "0px 10px ",
+  },
   board: { height: 352 },
   error: {
     textAlign: "center",
-    color: "red",
+    color: "#ff5c75",
     height: "1.8em"
   }
 };
@@ -104,8 +121,8 @@ class App extends React.Component<{}, AppState> {
           </Row>
           <Row>
             <Col style={styles.controls}>
-              {!running && <Button onClick={this.handleStart}>Play</Button>}
-              {running && <Button onClick={this.handleStop}>Pause</Button>}
+              {!running && <Button style={styles.playButton} onClick={this.handleStart}>Play</Button>}
+              {running && <Button style={styles.pauseButton} onClick={this.handleStop}>Pause</Button>}
               <Button onClick={this.handleReset}>Reset</Button>
             </Col>
           </Row>
