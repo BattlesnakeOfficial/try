@@ -1,9 +1,9 @@
 export const colors = {
   pageBackground: "#fff",
   gridBackground: "#fff",
-  cellBackground: "#e8e8e8",
+  cellBackground: "#f1f1f1",
   healthBarDeathBackground: "#333",
-  food: "orange",
+  food: "#ff5a72",
   healthBar: "#0f0",
   healthBarOutline: "#555",
   lightText: "#fff",
