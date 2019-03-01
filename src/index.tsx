@@ -26,16 +26,16 @@ const styles: { [k: string]: React.CSSProperties } = {
     borderRadius: "50px",
     padding: "0.5em 1.5em",
     color: "white",
-  },  
-  editor: { 
-    height: 352,
+  },
+  editor: {
+    height: '100vh',
     flex: 2,
     padding: "0px 10px ",
   },
   board: { height: 352 },
   error: {
     textAlign: "center",
-    color: "#ff5c75",
+    color: 'white',
     height: "1.8em"
   }
 };
